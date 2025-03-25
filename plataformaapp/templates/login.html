@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+
+    <style>
+      body {
+        background-color: #80c1b8;
+        font-family: "Montserrat", sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      .login-container {
+        background-color: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 350px;
+        text-align: center;
+      }
+
+      .login-container h1 {
+        color: #04736c; /* verde escuro */
+        margin-bottom: 1.5rem;
+      }
+
+      .login-container input[type="text"],
+      .login-container input[type="password"] {
+        width: 100%;
+        padding: 0.75rem;
+        margin: 0.5rem 0;
+        border: 1px solid #31988b;
+        border-radius: 5px;
+        font-family: "Montserrat", sans-serif;
+        box-sizing: border-box;
+      }
+
+      .login-container button {
+        width: 100%;
+        background-color: #31988b;
+        color: white;
+        cursor: pointer;
+        padding: 0.75rem;
+        border: none;
+        border-radius: 5px;
+        margin-top: 1rem;
+        font-family: "Montserrat", sans-serif;
+      }
+
+      .login-container button:hover {
+        background-color: #04736c;
+      }
+
+      .icon {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 1rem;
+        color: #31988b;
+      }
+
+      .input-wrapper {
+        position: relative;
+        margin-bottom: 1rem;
+      }
+
+      .error-message {
+        color: red;
+        margin-bottom: 1rem;
+      }
+
+      /* Resgatar senha */
+      .nav-login a {
+        font-size: 0.8rem;
+        margin-top: 1rem;
+        color: #808080;
+        text-decoration: underline;
+      }
+
+      .nav-login a:hover {
+        color: #04736c;
+      }
+
+      .nav-login {
+        margin-top: 1rem;
+        display: flex;
+        justify-content: center;
+      }
+
+      /* Estilos responsivos */
+      @media (max-width: 768px) {
+        body {
+          padding: 1rem;
+        }
+
+        .login-container {
+          padding: 1.5rem;
+          width: 100%;
+          max-width: 300px;
+        }
+
+        .login-container h1 {
+          font-size: 1.5rem;
+        }
+
+        .login-container button {
+          padding: 0.6rem;
+          font-size: 0.9rem;
+        }
+
+        .login-container input[type="text"],
+        .login-container input[type="password"] {
+          padding: 0.6rem;
+          font-size: 0.9rem;
+        }
+
+        .icon {
+          right: 0.75rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .login-container {
+          padding: 1rem;
+          width: 100%;
+          max-width: 250px;
+        }
+
+        .login-container h1 {
+          font-size: 1.2rem;
+        }
+
+        .login-container button {
+          padding: 0.5rem;
+          font-size: 0.8rem;
+        }
+
+        .login-container input[type="text"],
+        .login-container input[type="password"] {
+          padding: 0.5rem;
+          font-size: 0.8rem;
+        }
+
+        .icon {
+          right: 0.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-container">
+      <h1>Login</h1>
+      {% if error %}
+      <p class="error-message">{{ error }}</p>
+      {% endif %}
+      <form method="POST">
+        {% csrf_token %}
+        <div class="input-wrapper">
+          <input type="text" name="username" placeholder="Usuário" required />
+          <i class="fas fa-user icon"></i>
+        </div>
+        <div class="input-wrapper">
+          <input
+            type="password"
+            name="password"
+            id="password-field"
+            placeholder="Senha"
+            required
+          />
+          <i class="fas fa-eye-slash icon" id="toggle-password"></i>
+        </div>
+        <button type="submit">Entrar</button>
+        <div class="nav-login">
+          <a href="#">Resgatar senha</a>
+        </div>
+      </form>
+    </div>
+
+    <!-- js alternar visibilidade da senha -->
+    <script>
+      const togglePassword = document.querySelector("#toggle-password");
+      const passwordField = document.querySelector("#password-field");
+
+      togglePassword.addEventListener("click", function () {
+        const type =
+          passwordField.getAttribute("type") === "password"
+            ? "text"
+            : "password";
+        passwordField.setAttribute("type", type);
+        this.classList.toggle("fa-eye");
+        this.classList.toggle("fa-eye-slash");
+      });
+    </script>
+  </body>
+</html>
