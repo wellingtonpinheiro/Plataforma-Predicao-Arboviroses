@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geo-Saúde Predições</title>
+
+    <!-- Ícone do site (Favicon) -->
+    <link rel="icon" type="image/x-icon" href="{% static 'img/iconCB.png' %}">
+
+    <!-- Importando a fonte Montserrat do Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Ícones do Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: #31988b;
+            padding: 1rem 10%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar .title {
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-weight: regular;
+            font-size: 0.8rem;
+            margin-left: 1rem;
+        }
+
+        .navbar a:hover {
+            color: #d3d3d3;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 10%;
+            background-color: #f5f5f5;
+        }
+
+        .content {
+            flex: 1;
+        }
+
+        .content h2 {
+            font-size: 2rem;
+            color: #31988b;
+            margin-bottom: 1.5rem;
+        }
+
+        .content p {
+            font-size: 1rem;
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .content .buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .content .buttons a {
+            padding: 0.75rem 2rem;
+            text-decoration: none;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            background-color: #31988b;
+        }
+
+        .illustration {
+            flex: 1;
+            text-align: center;
+        }
+
+        .illustration img {
+            width: 90%;
+            max-width: 360px; 
+            margin-left: 150px;
+            margin-top: 35px;
+        }
+
+        /* Logos no meio */
+        .logos {
+            position: fixed;
+            bottom: 40px;
+            right: 35%;
+            display: flex;
+            gap: 20px;
+        }
+
+        .logos img {
+            width: 90px;
+            height: auto;
+        }
+        .desativado {
+            pointer-events: none;  /* Impede cliques */
+            opacity: 0.6;          /* Deixa o link visualmente desativado */
+            cursor: default;       /* Muda o cursor para indicar que não é clicável */
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                padding: 2rem 5%;
+            }
+
+            .illustration img {
+                max-width: 250px;
+            }
+
+            .navbar {
+                padding: 1rem 5%;
+            }
+
+            .logos {
+                bottom: 10px;
+                right: 5%;
+            }
+
+            .logos img {
+                width: 70px;
+            }
+
+           
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="title">GEO-SAÚDE PREDIÇÕES</div>
+        <div>
+            <a href="{% url 'casos' %}" class="{% if not request.user.is_authenticated %}desativado{% endif %}">PREDIÇÃO DE CASOS</a>
+            <a href="{% url 'criadouros' %}" class="{% if not request.user.is_authenticated %}desativado{% endif %}">PREDIÇÃO DE CRIADOUROS</a>            
+            <a href="{% url 'home' %}">INÍCIO</a>
+            
+            {% if request.user.is_authenticated %}
+                <a href="{% url 'logout' %}">LOGOUT</a>
+            {% else %}
+                <a href="{% url 'login' %}">LOGIN</a>
+            {% endif %}
+        </div>
+    </div>
+    
+
+    <div class="container">
+        <div class="content">
+            <h2>Lorem Ipsum.</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec placerat pellentesque lacus eget dignissim. Etiam rutrum sit amet felis et rutrum. Nunc blandit scelerisque bibendum. Mauris a neque vel nulla imperdiet faucibus. Aliquam hendrerit turpis et velit commodo, maximus placerat risus semper. Vivamus porttitor aliquet mauris vel tempor. Proin malesuada lacinia pharetra. Aliquam faucibus pharetra felis non vulputate. Fusce aliquam maximus est sit amet convallis. In tristique nec augue in pharetra.</p>
+            <div class="buttons">
+                <a href="{% url 'login' %}" class="login-btn">Login</a>
+            </div>
+        </div>
+        <div class="illustration">
+            <img src="{% static 'img/mapaBR.png' %}" alt="Mapa Brasil">
+        </div>
+    </div>
+
+    <div class="logos">
+        <img src="{% static 'img/cnpq.png' %}" alt="CNPQ">
+        <img src="{% static 'img/logo-ms.png' %}" alt="MS">
+        <img src="{% static 'img/ufpelogo.png' %}" alt="UFPE">
+        <img src="{% static 'img/logocb.png' %}" alt="Computação Biomédica">
+    </div>
+
+</body>
+</html>
