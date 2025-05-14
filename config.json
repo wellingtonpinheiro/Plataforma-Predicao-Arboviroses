@@ -1,0 +1,42 @@
+
+
+{
+  "dados_APAC": {
+    "arquivo_coord": "coordenadas-bairros-recife.csv",
+    "pasta_precipitacao": "distribuicao chuva casos",
+    "arquivo_dados_APAC": "dadosAPAC.txt",
+    "anos": ["2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021"]
+  },
+  "dados_INMET": {
+    "arquivo_coord": "coordenadas-bairros-recife.csv",
+    "pasta_dados_brutos": "Dados INMET",
+    "pasta_dados_ano": "dados INMET por ano",
+    "estacao": "A301",
+    "anos": ["2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021"],
+    "pasta_temperatura": "temperatura casos",
+    "pasta_vento": "vento casos",
+    "pasta_umidade_relativa": "umidade relativa casos"
+  },
+  "dados_casos": {
+  "pasta_dengue": "notificacoes dengue",
+  "pasta_zika": "notificacoes zika",
+  "pasta_chikungunya": "notificacoes chikungunya",
+  "pasta_casos": "quantidade casos",
+  "arquivo_coord": "coordenadas-bairros-recife.csv",
+  "anos": ["2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021"]
+},
+
+"dados_predicao": {
+  "pasta_bimestres": "quantidade casos",
+  "arquivo_coord": "coordenadas-bairros-recife.csv",
+  "pasta_predicao": "dados predicao bimestres casos"
+},
+
+"interpolacao_predicao": {
+  "pasta_conjuntos_predicao": "dados predicao bimestres casos",
+  "pasta_conjuntos_interpolados": "conjunto treino casos",
+  "caminho_rscript": "C:/Program Files/R/R-4.5.0/bin/Rscript.exe"
+}
+
+
+}
