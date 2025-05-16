@@ -6,6 +6,9 @@ import json
 # Lê parâmetros do config.json
 with open("config.json", "r") as f:
     config = json.load(f)
+    
+# Define tipo de análise: "casos" ou "criadouros"
+tipo = config["tipo_analise"]   
 params = config["dados_APAC"]
 
 # Parâmetros

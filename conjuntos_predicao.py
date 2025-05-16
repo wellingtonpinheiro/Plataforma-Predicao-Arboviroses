@@ -20,13 +20,20 @@ contatos: cll@ecomp.poli.br, acgs@ecomp.poli.br, wellington.santos@ufpe.br
 import pandas as pd
 import dataset
 import os
+import json
 
-############ parâmetros iniciais ############
-pasta_dados_bimestres = "quantidade casos"  # pasta que contém o conjunto de dados bimestrais
-arquivo_coord = "coordenadas-bairros-recife.csv"  # arquivo com as coordenadas dos bairros
-pasta_conjuntos_bimestres = "dados predicao bimestres casos"
-coord = 0  # inicialização da variável das coordenadas
-#############################################
+# Lê parâmetros do config.json
+with open("config.json", "r") as f:
+    config = json.load(f)
+    
+tipo = config["tipo_analise"] 
+params = config["dados_predicao"][tipo]
+
+# Parâmetros
+pasta_dados_bimestres = params["pasta_bimestres"]
+arquivo_coord = params["arquivo_coord"]
+pasta_conjuntos_bimestres = params["pasta_predicao"]
+##########################################
 
 # criar pasta para salvar os cojuntos de predição por bimestre
 os.makedirs(pasta_conjuntos_bimestres, exist_ok=True)

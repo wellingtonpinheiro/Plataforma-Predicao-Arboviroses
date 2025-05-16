@@ -30,7 +30,9 @@ VARIÁVEIS:
 # Lê parâmetros do config.json
 with open("config.json", "r") as f:
     config = json.load(f)
-params = config["dados_INMET"]
+    
+tipo = config["tipo_analise"]
+params = config["dados_INMET"][tipo]
 
 # Parâmetros
 arquivo_coord = params["arquivo_coord"]

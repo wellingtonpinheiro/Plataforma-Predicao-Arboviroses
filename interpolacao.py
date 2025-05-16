@@ -2,18 +2,24 @@ import subprocess
 import os
 
 
-def Interpolation(folder1, folder2, path):
+def Interpolation(folder1, folder2, rscript_path):
     """
-    :param folder2: pasta para salvar os mapas interpolados
-    :param folder1: pasta com os arquivos ".csv" para interpolação
-    :return:
+    Executa o script R de interpolação com os diretórios de entrada e saída corrigidos.
+
+    :param folder1: pasta com os arquivos .csv para interpolação (entrada)
+    :param folder2: pasta para salvar os arquivos interpolados (saída)
+    :param rscript_path: caminho para o executável Rscript (ex: "C:/Program Files/R/R-4.3.2/bin/Rscript.exe")
     """
-    # definir os comandos e argumentos que serão passados para o prompt de comando
-    command = path
-    path2script = os.path.join(os.getcwd(), 'interpolation.R')
 
-    # build process command
-    cmd = [command, '--vanilla', path2script, folder1, folder2]
+    # Caminho absoluto do script R
+    path_to_script = os.path.abspath('interpolation.R')
 
-    # check_output will run to the command and store result
-    subprocess.call(cmd, shell=True)
+    # Caminhos absolutos e normalizados para o R (com barra normal '/')
+    input_dir  = os.path.abspath(folder1).replace("\\", "/")
+    output_dir = os.path.abspath(folder2).replace("\\", "/")
+
+    # Comando para chamar o Rscript
+    cmd = [rscript_path, '--vanilla', path_to_script, input_dir, output_dir]
+
+    # Executa o comando
+    subprocess.call(cmd)

@@ -174,11 +174,11 @@ def prediction_dataset(folder, coordinates):
         if folder == 'infestacao predial':
             filename = os.path.join(os.getcwd(), "dados predicao bimestres criadouros",
                                     "criadouros_" + str(year) + "_" + number_bimester + ".csv")
-            df_column = "total"
+            df_column = "infestacao predial"
             rainfall_folder = "distribuicao chuva criadouros"
-            wind_speed_folder = "vento criadouros"
-            temp_folder = "temperatura criadouros"
-            humidity_folder = "umidade relativa criadouros"
+            wind_speed_folder = "vento criadouro"
+            temp_folder = "temperatura criadouro"
+            humidity_folder = "umidade relativa criadouro"
 
         if not os.path.exists(filename):
             # coletando os dados por bimestre

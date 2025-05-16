@@ -1,51 +1,53 @@
 # --- início do script R corrigido ---
 
-# 1. workspace
-directory <- getwd()
-
-# 2. pacotes
+# 1. pacotes
 library(raster)
 library(terra)
 library(sp)
 library(sf)
 library(gstat)
 
-# 3. argumentos vindos do Python
+# 2. argumentos vindos do Python
 args <- commandArgs(trailingOnly = TRUE)
-# args[1] = pasta que TEM os .csv   (p.ex. "dados predicao bimestres casos")
-# args[2] = pasta onde VAI salvar   (p.ex. "conjunto treino casos")
+# args[1] = caminho da pasta que TEM os .csv (ex: "dados_predicao_bimestres_casos")
+# args[2] = caminho da pasta onde VAI salvar (ex: "conjunto_treino_casos")
+
+# 3. normaliza caminhos (relativo ou absoluto)
+input_dir  <- normalizePath(args[1], winslash = "/", mustWork = FALSE)
+output_dir <- normalizePath(args[2], winslash = "/", mustWork = FALSE)
+base_dir   <- normalizePath(getwd(), winslash = "/", mustWork = FALSE)
 
 # 4. arquivos para interpolar
 files_to_interpolate <- list.files(
-  file.path(directory, args[1]),
-  pattern = "\\.csv$",            # ← regex correta
+  input_dir,
+  pattern = "\\.csv$",
   full.names = FALSE
 )
 
-# 5. para garantir:
+# 5. verificação
 if (length(files_to_interpolate) == 0) {
-  stop("Nenhum .csv encontrado em: ", file.path(directory, args[1]))
+  stop("Nenhum .csv encontrado em: ", input_dir)
 }
 
-# 6. já existentes na pasta de saída
+# 6. arquivos já existentes
 files_existentes <- list.files(
-  file.path(directory, args[2]),
+  output_dir,
   pattern = "\\.csv$",
   full.names = FALSE
 )
 print(files_existentes)
 
 # 7. grade + shapefile
-coordinates  <- read.csv(file.path(directory, "grade_interpolacao_treino.csv"))
-recife_shp   <- shapefile(file.path(directory, "shapefiles", "RECIFE_WGS84.shp"))
+coordinates  <- read.csv(file.path(base_dir, "grade_interpolacao_treino.csv"))
+recife_shp   <- shapefile(file.path(base_dir, "shapefiles", "RECIFE_WGS84.shp"))
 
 # 8. loop principal
 for (k in seq_along(files_to_interpolate)) {
 
-  csv_in  <- files_to_interpolate[k]
-  fname   <- file.path(directory, args[2], csv_in)
-  fname_shp <- file.path(
-    directory, "shapefiles",
+  csv_in     <- files_to_interpolate[k]
+  fname      <- file.path(output_dir, csv_in)
+  fname_shp  <- file.path(
+    base_dir, "shapefiles",
     paste0(tools::file_path_sans_ext(csv_in), ".shp")
   )
 
@@ -57,7 +59,7 @@ for (k in seq_along(files_to_interpolate)) {
   message("🛠  Gerando mapa para: ", csv_in)
 
   # --- leitura do CSV de entrada ---
-  data <- read.csv(file.path(directory, args[1], csv_in))
+  data <- read.csv(file.path(input_dir, csv_in))
 
   # --- colunas disponíveis ---
   cols <- colnames(data)
@@ -81,23 +83,25 @@ for (k in seq_along(files_to_interpolate)) {
   proj4string(dataset) <- proj4string(recife_shp)
 
   # --- interpolações ---
-  final_data <- round(runif(n = nrow(coordinates)))
+  final_data <- data.frame(ID = round(runif(n = nrow(coordinates))))
 
-  for (j in 4:length(cols)) {              # ← j, não i
+  for (j in 4:length(cols)) {
     interp <- idw(dataset[[cols[j]]] ~ 1, dataset,
                   newdata = grid, idp = 2.0)
 
+    # Adiciona só a coluna com valores interpolados
     final_data <- cbind(
       final_data,
-      subset(as.data.frame(interp), select = -c(X, Y, var1.var))
+      subset(as.data.frame(interp), select = "var1.pred")
     )
     print(cols[j])
   }
 
-  final_data <- cbind(coordinates$Y, coordinates$X, final_data)
-  colnames(final_data) <- cols[2:length(cols)]
+  final_data <- cbind(X = coordinates$X, Y = coordinates$Y, final_data)
+
 
   # --- salva resultado ---
   write.csv(final_data, fname, row.names = FALSE)
 }
+
 # --- fim do script corrigido ---
