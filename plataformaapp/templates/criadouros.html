@@ -138,6 +138,63 @@
                 align-items: center;
             }
         }
+        .dropdowns-wrapper {
+            margin-top: 2rem;
+            font-size: 1rem;
+            color: #333;
+            padding-left: 10%;
+        }
+
+        #formDados .inputs-row {
+            display: flex;          
+            align-items: center;    
+            gap: 1rem;              
+        }
+
+        .dropdown{
+            width: 250px;           
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 15px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            background-color: white;
+            color: #31988b;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        #registrarBtn {
+            width: 250px;           
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 15px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            background-color: #31988b;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        #registrarBtn {
+            background-image: none;  
+            text-align: center;      
+        }
+        .dropdown:focus {
+            outline: none;
+            border-color: #31988b;
+            box-shadow: 0 0 2px rgba(49, 152, 139, 0.5);
+        }
+
+        #registrarBtn:hover {
+            background-color: #edf5f5;
+            color: #245c54;
+        }
+
+        #registrarBtn:focus {
+            outline: none;
+            border-color: #31988b;
+            box-shadow: 0 0 2px #31988b;
+        }
     </style>
 </head>
 <body>
@@ -152,6 +209,40 @@
             <a href="{% url 'login' %}">LOGIN</a>
         </div>
     </div>
+
+    <!-- Menu dropdown de seleção do bimestre -->
+    <div class="dropdowns-wrapper">
+        <form id="formDados" action="{% url 'criadouros' %}" method="POST">
+            {% csrf_token %}
+            <div class="inputs-row">
+                <select id="Ano" name="Ano" class="dropdown">
+                     <option value="">Selecionar Ano</option>
+                </select>
+                <select id="bimestre" name="bimestre" class="dropdown">
+                     <option value="">Selecionar Bimestre</option>
+                        <option value="jan-fev">Janeiro - Fevereiro</option>
+                        <option value="mar-abr">Março - Abril</option>
+                        <option value="mai-jun">Maio - Junho</option>
+                        <option value="jul-ago">Julho - Agosto</option>
+                        <option value="set-out">Setembro - Outubro</option>
+                        <option value="nov-dez">Novembro - Dezembro</option>
+                </select>
+                <button id="registrarBtn" type="submit">Predição</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const selectAno = document.getElementById("Ano");
+        const anoAtual = new Date().getFullYear();
+
+        for (let ano = 2010; ano <= anoAtual; ano++) {
+            const option = document.createElement("option");
+            option.value = ano;
+            option.textContent = ano;
+            selectAno.appendChild(option);
+        }
+    </script>
 
     <!-- Container principal com imagem à esquerda e containers à direita -->
     <div class="main-container">
