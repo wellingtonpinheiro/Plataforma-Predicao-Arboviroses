@@ -1,39 +1,27 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse
+from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 import joblib
 import os
+import json
 from django.conf import settings
 from .pipeline import executar_pipeline
 
-
+# Caminhos dos modelos
 def carregar_modelo_casos():
-    caminho_modelo = os.path.join(settings.BASE_DIR, 'meuapp', 'modelos', 'predicao_casos_2015-2016.pkl')
-    modelo = joblib.load(caminho_modelo)
-    return modelo
+    caminho_modelo = os.path.join(settings.BASE_DIR, 'plataformaapp', 'modelos', 'modelo_rf_casos_2014_1.pkl')
+    return joblib.load(caminho_modelo)
 
 def carregar_modelo_criadouros():
-    caminho_modelo = os.path.join(settings.BASE_DIR, 'meuapp', 'modelos', 'predicao_criadouros_2015-2016.pkl')
-    modelo = joblib.load(caminho_modelo)
-    return modelo
+    caminho_modelo = os.path.join(settings.BASE_DIR, 'plataformaapp', 'modelos', '')
+    return joblib.load(caminho_modelo)
 
-def fazer_predicao_casos(ano, bimestre):
-    modelo = carregar_modelo_casos()
-    entrada = [[int(ano), int(bimestre)]]
-    resultado = modelo.predict(entrada)
-    
-    return resultado[0]
+# Caminho JSON das métricas
+CAMINHO_METRICAS_CASOS = os.path.join(settings.BASE_DIR, 'plataformaapp', 'metricas_casos (1).json')
+CAMINHO_METRICAS_CRIADOUROS = os.path.join(settings.BASE_DIR, 'plataformaapp', 'metricas_criadouros.json')
 
-def fazer_predicao_criadouros(ano, bimestre):
-    modelo = carregar_modelo_criadouros()
-    entrada = [[int(ano), int(bimestre)]]
-    resultado = modelo.predict(entrada)
-    return resultado[0]
-
-    
-# View para a pagina de login
+# View de login
 def login_view(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -43,81 +31,107 @@ def login_view(request):
             login(request, user)
             return HttpResponseRedirect('/')
         else:
-            error_message = "Usuário ou senha incorretos"
-            return render(request, 'login.html', {'error': error_message})
+            return render(request, 'login.html', {'error': "Usuário ou senha incorretos"})
     return render(request, 'login.html')
 
-
+# View de logout
 def logout_view(request):
     logout(request)
     return redirect('login')
 
-# View para a homepage
+# View da homepage
 def home(request):
     return render(request, 'home.html')
 
-# View para a predição de casos
+# Função para carregar métricas
+def carregar_metricas(tipo, ano, bimestre):
+    if tipo == 'casos':
+        caminho = CAMINHO_METRICAS_CASOS
+        chave = f"modelo_rf_casos_{ano}_{bimestre}"
+    else:
+        caminho = CAMINHO_METRICAS_CRIADOUROS
+        chave = f"modelo_rf_criadouros_{ano}_{bimestre}"
+
+    try:
+        with open(caminho, 'r') as f:
+            metricas = json.load(f)
+        valores = metricas[chave]
+        return valores['corr'], valores['rmse'], valores['rrse']
+    except Exception as e:
+        return None, None, None
+
+# View para predição de casos
 @login_required(login_url='/login/')
 def casos(request):
+    contexto = {}
+
     if request.method == 'POST':
         ano = request.POST.get('Ano')
         bimestre = request.POST.get('bimestre')
 
         try:
-            # Predição
-            resultado_predicao = fazer_predicao_casos(ano, bimestre)
+            modelo = carregar_modelo_casos()
+            entrada = [[int(ano), int(bimestre)]]
+            resultado_predicao = modelo.predict(entrada)[0]
 
-            # Executar pipeline de interpolação
             sucesso, erro_pipeline = executar_pipeline('casos', ano, bimestre)
             if not sucesso:
                 resultado_mapa = f"Erro ao gerar o mapa: {erro_pipeline}"
             else:
                 resultado_mapa = "Mapa gerado com sucesso."
 
+            coef_corr, rmse, rrse = carregar_metricas('casos', ano, bimestre)
+
+            contexto = {
+                'ano': ano,
+                'bimestre': bimestre,
+                'resultado_predicao': resultado_predicao,
+                'resultado_mapa': resultado_mapa,
+                'mapa_url': f'/static/maps/mapa_{ano}_{bimestre}_casos.png',
+                'coef_corr': coef_corr,
+                'rmse': rmse,
+                'rrse': rrse
+            }
+
         except Exception as e:
-            resultado_predicao = f"Erro na predição: {str(e)}"
-            resultado_mapa = "Não foi possível gerar o mapa."
+            contexto['erro'] = f"Erro durante a predição: {str(e)}"
 
-        contexto = {
-            'ano': ano,
-            'bimestre': bimestre,
-            'resultado_predicao': resultado_predicao,
-            'resultado_mapa': resultado_mapa,
-            'mapa_url': f'/static/maps/mapa_{ano}_{bimestre}_casos.png'
-        }
-        return render(request, 'casos.html', contexto)
+    return render(request, 'casos.html', contexto)
 
-    return render(request, 'casos.html')
-
-# View para a predição de criadouros
+# View para predição de criadouros
 @login_required(login_url='/login/')
 def criadouros(request):
+    contexto = {}
+
     if request.method == 'POST':
         ano = request.POST.get('Ano')
         bimestre = request.POST.get('bimestre')
 
         try:
-            # Predição
-            resultado_predicao = fazer_predicao_criadouros(ano, bimestre)
+            modelo = carregar_modelo_criadouros()
+            entrada = [[int(ano), int(bimestre)]]
+            resultado_predicao = modelo.predict(entrada)[0]
 
-            # Executar pipeline de interpolação
             sucesso, erro_pipeline = executar_pipeline('criadouros', ano, bimestre)
             if not sucesso:
                 resultado_mapa = f"Erro ao gerar o mapa: {erro_pipeline}"
             else:
                 resultado_mapa = "Mapa gerado com sucesso."
 
+            coef_corr, rmse, rrse = carregar_metricas('criadouros', ano, bimestre)
+
+            contexto = {
+                'ano': ano,
+                'bimestre': bimestre,
+                'resultado_predicao': resultado_predicao,
+                'resultado_mapa': resultado_mapa,
+                'mapa_url': f'/static/maps/mapa_{ano}_{bimestre}_criadouros.png',
+                'coef_corr': coef_corr,
+                'rmse': rmse,
+                'rrse': rrse
+            }
+
         except Exception as e:
-            resultado_predicao = f"Erro na predição: {str(e)}"
-            resultado_mapa = "Não foi possível gerar o mapa."
+            contexto['erro'] = f"Erro durante a predição: {str(e)}"
 
-        contexto = {
-            'ano': ano,
-            'bimestre': bimestre,
-            'resultado_predicao': resultado_predicao,
-            'resultado_mapa': resultado_mapa,
-            'mapa_url': f'/static/maps/mapa_{ano}_{bimestre}_criadouros.png'
-        }
-        return render(request, 'criadouros.html', contexto)
-
-    return render(request, 'criadouros.html')
+    return render(request, 'criadouros.html', contexto)

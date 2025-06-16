@@ -20,7 +20,7 @@ def executar_pipeline(tipo, ano, bimestre):
         subprocess.run(['python', 'INTERPOLAÇÃO/conjuntos_predicao.py', tipo], check=True)
         subprocess.run(['python', 'INTERPOLAÇÃO/interpolacao_conjunto_predicao.py'], check=True)
 
-        return True, None  # Sucesso
+        return True, None  
 
     except subprocess.CalledProcessError as e:
         return False, f"Erro ao executar pipeline: {str(e)}"
