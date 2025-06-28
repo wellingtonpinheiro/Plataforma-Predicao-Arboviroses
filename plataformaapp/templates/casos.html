@@ -9,21 +9,13 @@
     <!-- Ícone do site (Favicon) -->
     <link rel="icon" type="image/x-icon" href="{% static 'img/iconCB.png' %}">
 
-    <!-- Importando a fonte Montserrat do Google Fonts -->
+    <!-- Fontes e Ícones -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
-
-    <!-- Ícones do Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <style>
-        body {
-            font-family: 'Montserrat', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-        }
+        body { font-family: 'Montserrat', sans-serif; margin: 0; padding: 0; background-color: #f5f5f5; }
 
-        /* Navbar */
         .navbar {
             background-color: #31988b;
             padding: 1rem 10%;
@@ -42,16 +34,12 @@
         .navbar a {
             color: white;
             text-decoration: none;
-            font-weight: regular;
             font-size: 0.8rem;
             margin-left: 1rem;
         }
 
-        .navbar a:hover {
-            color: #d3d3d3;
-        }
+        .navbar a:hover { color: #d3d3d3; }
 
-        /* Container principal com imagem à esquerda e containers à direita */
         .main-container {
             display: flex;
             justify-content: flex-start;
@@ -60,14 +48,15 @@
             margin-top: 3rem;
         }
 
-        /* Imagem à esquerda */
-        .imagem {
-            width: 40%;
-            max-width: 500px;
-            margin-right: 30px; /* Espaçamento entre a imagem e os containers */
+        .mapa-container {
+            width: 60%;
+            height: auto;
+            margin-right: 30px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
         }
 
-        /* Container à direita (informações e rodapé) */
         .container {
             display: flex;
             flex-direction: column;
@@ -76,9 +65,8 @@
             flex: 1;
         }
 
-        .informacoes {
+        .informacoes, .rodape-container {
             width: 350px;
-            min-height: 200px;
             padding: 20px;
             border-radius: 10px;
             background-color: white;
@@ -87,21 +75,9 @@
             flex-direction: column;
             justify-content: space-between;
             margin-bottom: 40px;
-            border: 3px solid #31988b;
         }
 
-        .rodape-container {
-            width: 350px;
-            min-height: 150px;
-            padding: 20px;
-            border-radius: 10px;
-            background-color: white;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            margin-bottom: 40px;
-        }
+        .informacoes { border: 3px solid #31988b; }
 
         .legenda {
             display: flex;
@@ -121,23 +97,23 @@
             border-radius: 3px;
         }
 
-        /* Responsividade */
         @media (max-width: 768px) {
             .main-container {
-                flex-direction: column; 
+                flex-direction: column;
                 align-items: center;
             }
 
-            .imagem {
-                width: 80%; 
+            .mapa-container {
+                width: 90%;
                 margin-right: 0;
             }
 
             .container {
-                width: 90%; 
+                width: 90%;
                 align-items: center;
             }
         }
+
         .dropdowns-wrapper {
             margin-top: 2rem;
             font-size: 1rem;
@@ -146,43 +122,31 @@
         }
 
         #formDados .inputs-row {
-            display: flex;          
-            align-items: center;    
-            gap: 1rem;              
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
-        .dropdown{
-            width: 250px;           
+        .dropdown, #registrarBtn {
+            width: 250px;
             padding: 0.5rem;
-            border: 1px solid #ccc;
             border-radius: 15px;
             font-family: 'Montserrat', sans-serif;
             font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .dropdown {
+            border: 1px solid #ccc;
             background-color: white;
             color: #31988b;
-            font-weight: bold;
-            cursor: pointer;
         }
+
         #registrarBtn {
-            width: 250px;           
-            padding: 0.5rem;
             border: 1px solid #ccc;
-            border-radius: 15px;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.9rem;
             background-color: #31988b;
             color: white;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        #registrarBtn {
-            background-image: none;  
-            text-align: center;      
-        }
-        .dropdown:focus {
-            outline: none;
-            border-color: #31988b;
-            box-shadow: 0 0 2px rgba(49, 152, 139, 0.5);
         }
 
         #registrarBtn:hover {
@@ -190,16 +154,21 @@
             color: #245c54;
         }
 
+        .dropdown:focus,
         #registrarBtn:focus {
             outline: none;
             border-color: #31988b;
             box-shadow: 0 0 2px #31988b;
         }
-</style>
+
+        .alert {
+            color: #d9534f;
+            font-weight: 500;
+        }
+    </style>
 </head>
 <body>
 
-    <!-- Navbar -->
     <div class="navbar">
         <div class="title">GEO-SAÚDE PREDIÇÕES</div>
         <div>
@@ -219,12 +188,12 @@
                 </select>
                 <select id="bimestre" name="bimestre" class="dropdown">
                      <option value="">Selecionar Bimestre</option>
-                        <option value="jan-fev">Janeiro - Fevereiro</option>
-                        <option value="mar-abr">Março - Abril</option>
-                        <option value="mai-jun">Maio - Junho</option>
-                        <option value="jul-ago">Julho - Agosto</option>
-                        <option value="set-out">Setembro - Outubro</option>
-                        <option value="nov-dez">Novembro - Dezembro</option>
+                     <option value="jan-fev">Janeiro - Fevereiro</option>
+                     <option value="mar-abr">Março - Abril</option>
+                     <option value="mai-jun">Maio - Junho</option>
+                     <option value="jul-ago">Julho - Agosto</option>
+                     <option value="set-out">Setembro - Outubro</option>
+                     <option value="nov-dez">Novembro - Dezembro</option>
                 </select>
                 <button id="registrarBtn" type="submit">Predição</button>
             </div>
@@ -234,7 +203,6 @@
     <script>
         const selectAno = document.getElementById("Ano");
         const anoAtual = new Date().getFullYear();
-
         for (let ano = 2014; ano <= anoAtual; ano++) {
             const option = document.createElement("option");
             option.value = ano;
@@ -243,51 +211,49 @@
         }
     </script>
 
-    <!-- Container principal com imagem à esquerda e containers à direita -->
+    <!-- Container principal -->
     <div class="main-container">
-        <!-- Imagem à esquerda -->
-        <div class="imagem">
-            <img src="{% static 'img/imagem.jpg' %}" alt="Imagem" style="width: 100%; border-radius: 8px;">
+
+        <!-- Exibir imagem PNG -->
+        <div class="mapa-container">
+            <h3 style="margin-left: 15px;">Mapa Gerado:</h3>
+            {% if mapa_disponivel and png_url %}
+                <div style="margin: 15px;">
+                    <img src="{{ png_url }}" alt="Mapa PNG" style="width: 100%; height: auto; border: 2px solid #31988b; border-radius: 10px;">
+                    <br><br>
+                    <a href="{{ png_url }}" download style="background-color: #31988b; color: white; padding: 10px 20px; text-decoration: none; border-radius: 10px;">Baixar PNG</a>
+                </div>
+            {% else %}
+                <p class="alert" style="margin: 15px;">Mapa ainda não disponível</p>
+            {% endif %}
         </div>
 
-        <!-- Containers à direita -->
+        <!-- Painéis à direita -->
         <div class="container">
             <div class="informacoes">
                 <h3>Concentração de casos</h3>
                 <div class="legenda">
-                    <div class="legenda-item">
-                        <div class="cor" style="background-color: red;"></div>
-                        <span>Altíssima</span>
-                    </div>
-                    <div class="legenda-item">
-                        <div class="cor" style="background-color: orange;"></div>
-                        <span>Alta</span>
-                    </div>
-                    <div class="legenda-item">
-                        <div class="cor" style="background-color: yellow;"></div>
-                        <span>Moderada</span>
-                    </div>
-                    <div class="legenda-item">
-                        <div class="cor" style="background-color: lightblue;"></div>
-                        <span>Baixa</span>
-                    </div>
-                    <div class="legenda-item">
-                        <div class="cor" style="background-color: blue;"></div>
-                        <span>Baixíssima</span>
-                    </div>
+                    <div class="legenda-item"><div class="cor" style="background-color: red;"></div><span>Altíssima</span></div>
+                    <div class="legenda-item"><div class="cor" style="background-color: orange;"></div><span>Alta</span></div>
+                    <div class="legenda-item"><div class="cor" style="background-color: yellow;"></div><span>Moderada</span></div>
+                    <div class="legenda-item"><div class="cor" style="background-color: lightblue;"></div><span>Baixa</span></div>
+                    <div class="legenda-item"><div class="cor" style="background-color: blue;"></div><span>Baixíssima</span></div>
                 </div>
             </div>
-        
+
             <div class="rodape-container">
-                <h3>Métricas do modelo:</h3>
-                <ul>
-                    <li>Coeficiente de correlação: {{ coef_corr }}</li>
-                    <li>RMSE: {{ rmse }}</li>
-                    <li>RRSE%: {{ rrse }}%</li>
-                </ul>
+                <div class="metricas">
+                    {% if metricas_disponiveis %}
+                        <h3>Métricas do modelo:</h3>
+                        <p>Coeficiente de correlação: {{ coef_corr|floatformat:4 }}</p>
+                        <p>RMSE: {{ rmse|floatformat:4 }}</p>
+                        <p>RRSE%: {{ rrse|floatformat:4 }}%</p>
+                    {% else %}
+                        <p class="alert">Métricas não disponíveis para {{ano}}/{{bimestre}}</p>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
-
 </body>
 </html>
