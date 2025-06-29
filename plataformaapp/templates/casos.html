@@ -6,15 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Geo-Saúde Predições</title>
 
-    <!-- Ícone do site (Favicon) -->
     <link rel="icon" type="image/x-icon" href="{% static 'img/iconCB.png' %}">
-
-    <!-- Fontes e Ícones -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
-        body { font-family: 'Montserrat', sans-serif; margin: 0; padding: 0; background-color: #f5f5f5; }
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
 
         .navbar {
             background-color: #31988b;
@@ -38,87 +41,16 @@
             margin-left: 1rem;
         }
 
-        .navbar a:hover { color: #d3d3d3; }
-
-        .main-container {
-            display: flex;
-            justify-content: flex-start;
-            align-items: flex-start;
-            padding: 2rem 10%;
-            margin-top: 3rem;
-        }
-
-        .mapa-container {
-            width: 60%;
-            height: auto;
-            margin-right: 30px;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            justify-content: flex-start;
-            flex: 1;
-        }
-
-        .informacoes, .rodape-container {
-            width: 350px;
-            padding: 20px;
-            border-radius: 10px;
-            background-color: white;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            margin-bottom: 40px;
-        }
-
-        .informacoes { border: 3px solid #31988b; }
-
-        .legenda {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .legenda-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .cor {
-            width: 16px;
-            height: 16px;
-            border-radius: 3px;
-        }
-
-        @media (max-width: 768px) {
-            .main-container {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .mapa-container {
-                width: 90%;
-                margin-right: 0;
-            }
-
-            .container {
-                width: 90%;
-                align-items: center;
-            }
+        .navbar a:hover {
+            color: #d3d3d3;
         }
 
         .dropdowns-wrapper {
             margin-top: 2rem;
             font-size: 1rem;
             color: #333;
-            padding-left: 10%;
+            display: flex;
+            justify-content: center;
         }
 
         #formDados .inputs-row {
@@ -165,6 +97,71 @@
             color: #d9534f;
             font-weight: 500;
         }
+
+        .main-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 1rem;
+        }
+
+        .mapa-container {
+            flex: 1 1 60%;
+            max-width: 750px;
+            min-width: 300px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            background-color: white;
+            padding-bottom: 1rem;
+        }
+
+        .container {
+            flex: 1 1 300px;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .rodape-container {
+            padding: 20px;
+            border-radius: 10px;
+            background-color: white;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            border: 3px solid #31988b;
+        }
+
+        .metricas p {
+            margin: 0.4rem 0;
+            font-size: 0.95rem;
+        }
+
+        .metricas small {
+            font-size: 0.8rem;
+            color: gray;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .mapa-container,
+            .container {
+                width: 100%;
+                max-width: 90%;
+            }
+
+            #formDados .inputs-row {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
     </style>
 </head>
 <body>
@@ -184,16 +181,16 @@
             {% csrf_token %}
             <div class="inputs-row">
                 <select id="Ano" name="Ano" class="dropdown">
-                     <option value="">Selecionar Ano</option>
+                    <option value="">Selecionar Ano</option>
                 </select>
                 <select id="bimestre" name="bimestre" class="dropdown">
-                     <option value="">Selecionar Bimestre</option>
-                     <option value="jan-fev">Janeiro - Fevereiro</option>
-                     <option value="mar-abr">Março - Abril</option>
-                     <option value="mai-jun">Maio - Junho</option>
-                     <option value="jul-ago">Julho - Agosto</option>
-                     <option value="set-out">Setembro - Outubro</option>
-                     <option value="nov-dez">Novembro - Dezembro</option>
+                    <option value="">Selecionar Bimestre</option>
+                    <option value="jan-fev">Janeiro - Fevereiro</option>
+                    <option value="mar-abr">Março - Abril</option>
+                    <option value="mai-jun">Maio - Junho</option>
+                    <option value="jul-ago">Julho - Agosto</option>
+                    <option value="set-out">Setembro - Outubro</option>
+                    <option value="nov-dez">Novembro - Dezembro</option>
                 </select>
                 <button id="registrarBtn" type="submit">Predição</button>
             </div>
@@ -211,43 +208,39 @@
         }
     </script>
 
-    <!-- Container principal -->
     <div class="main-container">
-
-        <!-- Exibir imagem PNG -->
+        <!-- Mapa -->
         <div class="mapa-container">
-            <h3 style="margin-left: 15px;">Mapa Gerado:</h3>
+            <h3 style="margin: 15px 0 0 15px; color: #245c54;">Mapa Gerado:</h3>
             {% if mapa_disponivel and png_url %}
                 <div style="margin: 15px;">
                     <img src="{{ png_url }}" alt="Mapa PNG" style="width: 100%; height: auto; border: 2px solid #31988b; border-radius: 10px;">
                     <br><br>
-                    <a href="{{ png_url }}" download style="background-color: #31988b; color: white; padding: 10px 20px; text-decoration: none; border-radius: 10px;">Baixar PNG</a>
+                    <a href="{{ png_url }}" download style="
+                        background-color: #31988b; 
+                        color: white; 
+                        padding: 10px 20px; 
+                        text-decoration: none; 
+                        border-radius: 10px;
+                        display: inline-block;
+                        margin-top: 10px;
+                    ">Baixar PNG</a>
                 </div>
             {% else %}
                 <p class="alert" style="margin: 15px;">Mapa ainda não disponível</p>
             {% endif %}
         </div>
 
-        <!-- Painéis à direita -->
+        <!-- Painel de Métricas -->
         <div class="container">
-            <div class="informacoes">
-                <h3>Concentração de casos</h3>
-                <div class="legenda">
-                    <div class="legenda-item"><div class="cor" style="background-color: red;"></div><span>Altíssima</span></div>
-                    <div class="legenda-item"><div class="cor" style="background-color: orange;"></div><span>Alta</span></div>
-                    <div class="legenda-item"><div class="cor" style="background-color: yellow;"></div><span>Moderada</span></div>
-                    <div class="legenda-item"><div class="cor" style="background-color: lightblue;"></div><span>Baixa</span></div>
-                    <div class="legenda-item"><div class="cor" style="background-color: blue;"></div><span>Baixíssima</span></div>
-                </div>
-            </div>
-
             <div class="rodape-container">
                 <div class="metricas">
                     {% if metricas_disponiveis %}
                         <h3>Métricas do modelo:</h3>
-                        <p>Coeficiente de correlação: {{ coef_corr|floatformat:4 }}</p>
-                        <p>RMSE: {{ rmse|floatformat:4 }}</p>
-                        <p>RRSE%: {{ rrse|floatformat:4 }}%</p>
+                        <p><strong>Coeficiente de correlação:</strong> {{ coef_corr|floatformat:4 }}</p>
+                        <p><strong>RMSE:</strong> {{ rmse|floatformat:4 }}</p>
+                        <p><strong>RRSE%:</strong> {{ rrse|floatformat:4 }}%</p>
+                       
                     {% else %}
                         <p class="alert">Métricas não disponíveis para {{ano}}/{{bimestre}}</p>
                     {% endif %}
@@ -255,5 +248,7 @@
             </div>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

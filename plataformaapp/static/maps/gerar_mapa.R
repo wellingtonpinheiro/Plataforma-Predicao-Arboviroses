@@ -38,7 +38,7 @@ tryCatch({
                 popup = ~bairro_nom,
                 label = ~bairro_nom,
                 group = "Bairros") %>%
-    addLegend(pal = paleta, values = valores, title = "Predição")
+    addLegend(pal = paleta, values = valores, title = "Quantidade por bairro")
   
   cat("💾 Salvando HTML temporário em:\n", saida_html, "\n")
   saveWidget(mapa, saida_html, selfcontained = TRUE)

@@ -96,10 +96,12 @@ def view_predicao(request, tipo):
 
             import pandas as pd
             nome_arquivo_csv = f'ConjuntoPredicaoArboviroses_{ano}_{int(bimestre):02d}.csv'
-            caminho_csv = os.path.join(settings.BASE_DIR, 'INTERPOLAÇÃO', 'conjunto treino casos', nome_arquivo_csv)
 
+          
+            # === Leitura para predição ===
+            caminho_csv = os.path.join(settings.BASE_DIR, 'INTERPOLAÇÃO', 'conjunto treino casos', nome_arquivo_csv)
             if not os.path.exists(caminho_csv):
-                raise FileNotFoundError(f"Arquivo CSV não encontrado: {caminho_csv}")
+                raise FileNotFoundError(f"Arquivo CSV para predição não encontrado: {caminho_csv}")
 
             df = pd.read_csv(caminho_csv)
             if 'predicao' in df.columns:
@@ -126,13 +128,9 @@ def view_predicao(request, tipo):
             tif_url = f'/static/maps/predicao_recife.tif'
             png_path = os.path.join(settings.BASE_DIR, 'plataformaapp', 'static', 'maps', 'predicao_recife.png')
             png_existe = os.path.isfile(png_path)
-
             png_url = f'/static/maps/predicao_recife.png'
-
             geojson_path = os.path.join(settings.BASE_DIR, 'static', 'maps', f'{nome_base}.geojson')
             geojson_url = f'/static/maps/{nome_base}.geojson'
-
-           
 
             contexto.update({
                 'ano': ano,
@@ -159,7 +157,7 @@ def view_predicao(request, tipo):
             contexto['erro'] = f"Erro durante a predição: {str(e)}"
             print(f"[ERRO] View {tipo}: {str(e)}")
 
-    return render(request, f'{tipo}.html', contexto) 
+    return render(request, f'{tipo}.html', contexto)
 
 # === Views específicas que usam a genérica ===
 @login_required(login_url='/login/')

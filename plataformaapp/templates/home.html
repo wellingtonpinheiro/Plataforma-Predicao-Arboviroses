@@ -16,6 +16,9 @@
             margin: 0;
             padding: 0;
             background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         /* NAVBAR ORIGINAL */
@@ -45,12 +48,13 @@
             color: #d3d3d3;
         }
 
-        .container {
+        .main-content {
+            flex: 1;
+            padding: 3rem 10%;
+            background-color: #f5f5f5;
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            padding: 3rem 10%;
-            background-color: #f5f5f5;
         }
 
         .content {
@@ -70,6 +74,7 @@
             color: #333;
             line-height: 1.8;
             margin-bottom: 2rem;
+            text-align: justify;
         }
 
         .content .buttons {
@@ -107,18 +112,27 @@
             margin-top: 35px;
         }
 
-        /* LOGOS ORIGINAIS */
-        .logos {
-            position: fixed;
-            bottom: 40px;
-            right: 35%;
-            display: flex;
-            gap: 20px;
+        /* NOVA SEÇÃO DE LOGOS - FIXA NO RODAPÉ */
+        .footer-logos {
+            background-color: white;
+            padding: 20px 10%;
+            text-align: center;
+            border-top: 1px solid #e0e0e0;
         }
 
-        .logos img {
-            width: 90px;
-            height: auto;
+        .logos-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .logos-container img {
+            height: 50px;
+            width: auto;
+            max-width: 120px;
+            object-fit: contain;
         }
 
         .desativado {
@@ -128,13 +142,13 @@
         }
 
         @media (max-width: 768px) {
-            .container {
+            .main-content {
                 flex-direction: column;
                 padding: 2rem 5%;
             }
 
             .illustration img {
-                margin: 0 auto;
+                margin: 20px auto 0;
                 max-width: 250px;
             }
 
@@ -142,13 +156,13 @@
                 padding: 1rem 5%;
             }
 
-            .logos {
-                bottom: 10px;
-                right: 5%;
+            .logos-container {
+                gap: 15px;
             }
 
-            .logos img {
-                width: 70px;
+            .logos-container img {
+                height: 40px;
+                max-width: 80px;
             }
         }
     </style>
@@ -168,7 +182,7 @@
         </div>
     </div>
 
-    <div class="container">
+    <div class="main-content">
         <div class="content">
             <h2>Plataforma de Predição de Arboviroses</h2>
             <p>Esta plataforma foi desenvolvida para apoiar o monitoramento e a tomada de decisões estratégicas no combate às arboviroses, como dengue, zika e chikungunya. Utilizando dados espaciais e temporais, modelos preditivos e visualizações interativas, a ferramenta permite identificar áreas de risco e possíveis focos de criadouros do mosquito Aedes aegypti.</p>
@@ -195,11 +209,14 @@
         </div>
     </div>
 
-    <div class="logos">
-        <img src="{% static 'img/cnpq.png' %}" alt="CNPQ">
-        <img src="{% static 'img/logo-ms.png' %}" alt="MS">
-        <img src="{% static 'img/ufpelogo.png' %}" alt="UFPE">
-        <img src="{% static 'img/logocb.png' %}" alt="Computação Biomédica">
+    <!-- NOVA SEÇÃO DE LOGOS FIXA -->
+    <div class="footer-logos">
+        <div class="logos-container">
+            <img src="{% static 'img/cnpq.png' %}" alt="CNPQ">
+            <img src="{% static 'img/logo-ms.png' %}" alt="MS">
+            <img src="{% static 'img/ufpelogo.png' %}" alt="UFPE">
+            <img src="{% static 'img/logocb.png' %}" alt="Computação Biomédica">
+        </div>
     </div>
 </body>
 </html>
