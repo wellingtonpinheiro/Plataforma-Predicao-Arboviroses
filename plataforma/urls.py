@@ -10,8 +10,6 @@ urlpatterns = [  #rotas
     path('', views.home, name='home'),
     path('login/', views.login_view, name='login'),
     path('casos/', views.casos, name='casos'), 
-    path('criadouros/', views.criadouros, name='criadouros'), #EDITARS
+    path('criadouros/', views.criadouros, name='criadouros'),
     path('logout/', views.logout_view, name='logout'),
-   path('executar-teste/', views.executar_teste_pipeline, name='executar_teste_pipeline'),
-
 ] + static(settings.STATIC_URL, document_root=os.path.join(settings.BASE_DIR, 'static'))

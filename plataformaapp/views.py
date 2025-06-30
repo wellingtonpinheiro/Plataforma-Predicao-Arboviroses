@@ -129,15 +129,14 @@ def view_predicao(request, tipo):
             png_path = os.path.join(settings.BASE_DIR, 'plataformaapp', 'static', 'maps', 'predicao_recife.png')
             png_existe = os.path.isfile(png_path)
             png_url = f'/static/maps/predicao_recife.png'
-            geojson_path = os.path.join(settings.BASE_DIR, 'static', 'maps', f'{nome_base}.geojson')
-            geojson_url = f'/static/maps/{nome_base}.geojson'
+        
+
 
             contexto.update({
                 'ano': ano,
                 'bimestre': bimestre_nome,
                 'resultado_mapa': "Dados prontos para o mapa." if sucesso else f"Erro: {erro_pipeline}",
                 'tif_url': tif_url,
-                'geojson_url': geojson_url,
                 'png_url': png_url,
                 'coef_corr': coef_corr,
                 'rmse': rmse,
@@ -147,7 +146,6 @@ def view_predicao(request, tipo):
                 'debug_info': {
                     'tif_path': tif_path,
                     'png_path': png_path,
-                    'geojson_path': geojson_path,
                     'metricas_chave': f"modelo_rf_{tipo}_{ano}_{int(bimestre):02d}",
                     'timestamp': int(time.time())
                 }
@@ -168,29 +166,3 @@ def casos(request):
 def criadouros(request):
     return view_predicao(request, 'criadouros')
 
-# === Teste da pipeline ===
-def executar_teste_pipeline(request):
-    tipo = 'casos'
-    ano = 2014
-    bimestre = 1
-
-    sucesso, erro_pipeline = executar_pipeline(tipo, ano, bimestre)
-    coef_corr, rmse, rrse = carregar_metricas(tipo, ano, bimestre)
-
-    tif_path = os.path.join(settings.BASE_DIR, 'static', 'maps', 'predicao_recife.tif')
-    tif_url = f'/static/maps/predicao_recife.tif?v={int(time.time())}'
-
-    contexto = {
-        'mensagem': 'Pipeline executada com sucesso!' if sucesso else f'Erro: {erro_pipeline}',
-        'tif_url': tif_url,
-        'coef_corr': coef_corr,
-        'rmse': rmse,
-        'rrse': rrse,
-        'ano': ano,
-        'bimestre': bimestre,
-        'metricas_disponiveis': all(v is not None for v in [coef_corr, rmse, rrse]),
-        'mapa_disponivel': os.path.exists(tif_path),
-        'mapa_interativo': True
-    }
-
-    return render(request, 'home.html', contexto)
