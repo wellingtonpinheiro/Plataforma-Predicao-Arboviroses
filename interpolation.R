@@ -38,7 +38,7 @@ files_existentes <- list.files(
 print(files_existentes)
 
 # 7. grade + shapefile
-coordinates  <- read.csv(file.path(base_dir, "grade_interpolacao_treino.csv"))
+coordinates  <- read.csv(file.path(base_dir, "grade_interpolacao_mapa (2).csv"))
 recife_shp   <- shapefile(file.path(base_dir, "shapefiles", "RECIFE_WGS84.shp"))
 
 # 8. loop principal
